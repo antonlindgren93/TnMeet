@@ -1,5 +1,5 @@
 import { createStackNavigator } from 'react-navigation-stack'
-import { createAppContainer } from 'react-navigation'
+import { createAppContainer, StackActions } from 'react-navigation'
 import SignIn from './src/screens/SignIn'
 import ApiKeys from './Apis/ApiKeys'
 
