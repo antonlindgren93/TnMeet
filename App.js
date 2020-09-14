@@ -7,6 +7,7 @@ import LoadingScreen from './src/screens/LoadingScreen'
 import SignUp from './src/screens/SignUp'
 import ManageHobbies from './src/screens/ManageHobbies'
 import * as firebase from 'firebase'
+import MainScreen from './src/screens/MainScreen'
 
 
 const navigator = createStackNavigator({
@@ -14,11 +15,12 @@ const navigator = createStackNavigator({
   SignIn: SignIn,
   LoadingScreen: LoadingScreen,
   SignUp: SignUp,
-  ManageHobbies: ManageHobbies
+  ManageHobbies: ManageHobbies,
+  MainScreen: MainScreen
 
 
 }, {
-  initialRouteName: 'SignIn',
+  initialRouteName: 'MainScreen',
   defaultNavigationOptions: {
 
   }
