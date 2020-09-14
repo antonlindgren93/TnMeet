@@ -1,5 +1,7 @@
 import React from 'react'
 import { StyleSheet, Platform, Image, Text, View } from 'react-native'
+import * as firebase from 'firebase'
+
 
 
 const ManageHobbies = () => {
