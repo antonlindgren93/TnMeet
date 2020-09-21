@@ -5,6 +5,8 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 import ProfileComponent from '../components/ProfileComponent'
+import * as firebase from 'firebase'
+import AuthenticateUser from '../../constants/authentication'
 
 class DetailsScreen extends React.Component {
     render() {
@@ -17,8 +19,42 @@ class DetailsScreen extends React.Component {
         );
     }
 }
-
+function authUser() {
+    return new Promise(function (resolve, reject) {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                resolve(user);
+                console.log(user.email + 'logged in')
+            } else {
+                reject('User not logged in');
+            }
+        });
+    });
+}
 class HomeScreen extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loggedInUser: null,
+            isAuthenticated: false,
+            isAuthenticating: true,
+            res: null
+        };
+    }
+
+
+    componentDidMount() {
+        authUser().then((user) => {
+            // this.userHasAuthenticated(true);
+            this.setState({ isAuthenticating: false });
+            console.log('componentdidmount user is' + user)
+        }, (error) => {
+            this.setState({ isAuthenticating: false });
+            alert(error);
+        });
+    }
+
     render() {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -32,6 +68,29 @@ class HomeScreen extends React.Component {
     }
 }
 class ProfileScreen extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loggedInUser: null,
+            isAuthenticated: false,
+            isAuthenticating: true
+        };
+    }
+
+
+    componentDidMount() {
+
+        authUser().then((user) => {
+            //console.log('componentdidmount user is' + user)
+            //this.userHasAuthenticated(true);
+            this.setState({ isAuthenticating: false });
+        }, (error) => {
+            this.setState({ isAuthenticating: false });
+            alert(e);
+        });
+    }
     render() {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -54,6 +113,26 @@ class ProfileScreen extends React.Component {
 
 
 class SettingsScreen extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loggedInUser: null,
+            isAuthenticated: false,
+            isAuthenticating: true
+        };
+    }
+
+
+    componentDidMount() {
+        authUser().then((user) => {
+            //this.userHasAuthenticated(true);
+            this.setState({ isAuthenticating: false });
+        }, (error) => {
+            this.setState({ isAuthenticating: false });
+            alert(e);
+        });
+    }
     render() {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -79,15 +158,16 @@ const SettingsStack = createStackNavigator({
 });
 const ProfileStack = createStackNavigator({
     Settings: SettingsScreen,
-    
+
 })
 
 export default createAppContainer(
     createBottomTabNavigator(
         {
-            Home: HomeStack,
+            Profile: ProfileScreen,
             Settings: SettingsStack,
-            Profile: ProfileScreen
+            Home: HomeStack
+
         },
         {
             /* Other configuration remains unchanged */
