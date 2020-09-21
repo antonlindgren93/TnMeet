@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, StyleSheet, View, Image, ScrollView, TouchableOpacity, TextInput, TextInpu, Button,Dimensions } from 'react-native'
 import ApiKeys from '../../Apis/ApiKeys'
 import * as firebase from 'firebase'
-import TestComponent from '../components/TestComponent'
+
 import {LinearGradient} from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons';

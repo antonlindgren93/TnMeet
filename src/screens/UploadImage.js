@@ -56,7 +56,7 @@ export default class UploadImage extends React.Component {
            
             <View>
                 <input type="file" onChange={(e) =>{this.handleChange(e.target.files)}} />
-                <button onClick={this.handleSave}>Save></button>
+                <button onClick={this.handleSave}>Save</button>
                 <button onClick={this.showImage}>Show image</button>
                 <img id="new-img"/>
             </View>

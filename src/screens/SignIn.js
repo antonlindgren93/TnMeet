@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, StyleSheet, View, Image, ScrollView, TouchableOpacity, TextInput, TextInpu, Button } from 'react-native'
 import ApiKeys from '../../Apis/ApiKeys'
 import * as firebase from 'firebase'
-import TestComponent from '../components/TestComponent'
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
@@ -128,10 +128,10 @@ const styles = StyleSheet.create({
         fontSize: 36,
         color: '#fff',
 
-        paddingBottom:10,
-        marginBottom:40,
-        alignSelf:'center',
-       
+        paddingBottom: 10,
+        marginBottom: 40,
+        alignSelf: 'center',
+
     },
     textinput: {
         alignSelf: 'stretch',
