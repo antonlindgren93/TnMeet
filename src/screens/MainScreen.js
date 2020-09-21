@@ -61,7 +61,7 @@ class HomeScreen extends React.Component {
                 {/* other code from before here */}
                 <Button
                     title="Go to Details"
-                    onPress={() => this.props.navigation.navigate('Details')}
+                    onPress={() => this.props.navigation.navigate('UserDetails')}
                 />
             </View>
         );
@@ -101,7 +101,7 @@ class ProfileScreen extends React.Component {
                     onPress={() => this.props.navigation.navigate('Details')}
                 /> */}
                 <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('Details')}
+                    onPress={() => this.props.navigation.navigate('UserInfo')}
                     style={styles.editProfile}
                 >
                     <Text>edit profile here...</Text>

@@ -11,7 +11,6 @@ import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { StackActions, NavigationActions } from 'react-navigation'
 
-//import { Icon } from 'react-native-elements';
 
 
 export default class SignUp extends React.Component {
@@ -35,13 +34,13 @@ export default class SignUp extends React.Component {
         }
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'MainScreen' })],
+            actions: [NavigationActions.navigate({ routeName: 'UserInfo' })],
         })
 
         firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
             //.then(() => this.props.navigation.navigate('ManageHobbies'))
             .then(() => this.props.navigation.dispatch(resetAction))
-            .catch(error => this.setState({ errorMessage: error.message }))
+            .catch(error => this.setState({ errorMessage: error.message}))
         console.log('handleSignUp')
     }
     
@@ -87,17 +86,17 @@ export default class SignUp extends React.Component {
                             //secureTextEntry
                             placeholder="Password"
                             autoCapitalize="none"
-                            secureTextEntry={true}
+                            //secureTextEntry={true}
                             placeholderTextColor="#fff"
-                            onChangeText={passwordConfirm => this.setState({ passwordConfirm })}
-                            value={this.state.passwordConfirm}
+                            onChangeText={password => this.setState({ password })}
+                            value={this.state.password}
                         />
                     </View>
 
-                    <TouchableOpacity style={styles.signUpBtn}
-                        onPress={this.handleSignUp}>
-                        <Text style={styles.signUpBtn}>Sign up! <AntDesign name="arrowright" size={24} color="white" /></Text>
-                    </TouchableOpacity>
+                <TouchableOpacity style={styles.signUpBtn}
+                 onPress={this.handleSignUp}> 
+                 <Text style={styles.signUpBtn}>Sign up! </Text>
+                </TouchableOpacity>
 
                     <Text style={styles.lineStyle}>───────────── OR ─────────────</Text>
 

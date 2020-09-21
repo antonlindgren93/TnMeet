@@ -17,6 +17,7 @@ import { Asset } from 'expo-asset'
 
 
 
+
 function authUser() {
   return new Promise(function (resolve, reject) {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -104,6 +105,10 @@ class App extends React.Component {
 
 }
 
+import UserInfo from './src/screens/UserInfo'
+import UserDetails from './src/screens/UserDetails'
+
+
 
 
 const navigator = createStackNavigator({
@@ -114,11 +119,12 @@ const navigator = createStackNavigator({
   ManageHobbies: ManageHobbies,
   MainScreen: MainScreen,
   App: App,
+  UserInfo: UserInfo
 
 
 
 }, {
-  initialRouteName: 'App',
+  initialRouteName: 'SignUp',
   defaultNavigationOptions: {
 
   }
