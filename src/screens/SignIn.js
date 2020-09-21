@@ -23,10 +23,12 @@ export default class SignIn extends React.Component {
     }
 
 
+
     handleLogin = () => {
 
         if (!firebase.apps.length) {
             firebase.initializeApp(ApiKeys.FirebaseConfig);
+
         }
 
         const resetAction = StackActions.reset({
@@ -81,9 +83,18 @@ export default class SignIn extends React.Component {
                         />
                     </View>
 
+
+                <TouchableOpacity style={styles.logInBtn} onPress={this.handleLogin}>
+                    <Text style={styles.logInBtn}>Log in </Text>
+                </TouchableOpacity>
+                
+                
+                <Text style={styles.lineStyle}>───────────── OR ─────────────</Text>
+
                     <TouchableOpacity style={styles.logInBtn} onPress={this.handleLogin}>
                         <Text style={styles.logInBtn}>Log in <AntDesign name="arrowright" size={24} color="white" /> </Text>
                     </TouchableOpacity>
+
 
 
                     <Text style={styles.lineStyle}>───────────── OR ─────────────</Text>
@@ -116,10 +127,11 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 36,
         color: '#fff',
-        paddingBottom: 10,
-        marginBottom: 40,
-        alignSelf: 'center',
 
+        paddingBottom:10,
+        marginBottom:40,
+        alignSelf:'center',
+       
     },
     textinput: {
         alignSelf: 'stretch',

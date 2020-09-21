@@ -9,6 +9,12 @@ import SignUp from './src/screens/SignUp'
 import ManageHobbies from './src/screens/ManageHobbies'
 import * as firebase from 'firebase'
 import MainScreen from './src/screens/MainScreen'
+
+import UserInfo from './src/screens/UserInfo'
+import UserDetails from './src/screens/UserDetails'
+
+
+
 import { getUser } from './constants/functions'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { Ionicons } from '@expo/vector-icons';
@@ -106,6 +112,7 @@ class App extends React.Component {
 
 
 
+
 const navigator = createStackNavigator({
 
   SignIn: SignIn,
@@ -113,12 +120,23 @@ const navigator = createStackNavigator({
   SignUp: SignUp,
   ManageHobbies: ManageHobbies,
   MainScreen: MainScreen,
+
+  UserInfo: UserInfo,
+  UserDetails: UserDetails,
+  
+  
+
+
+}, {
+  initialRouteName: 'UserInfo',
+
   App: App,
 
 
 
 }, {
   initialRouteName: 'App',
+
   defaultNavigationOptions: {
 
   }
