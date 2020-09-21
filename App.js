@@ -124,7 +124,7 @@ const navigator = createStackNavigator({
 
 
 }, {
-  initialRouteName: 'SignUp',
+  initialRouteName: 'MainScreen',
   defaultNavigationOptions: {
 
   }
