@@ -25,7 +25,7 @@ export default class SignIn extends React.Component {
             firebase
                 .auth()
                 .signInWithEmailAndPassword(this.state.email, this.state.password)
-                .then(() => this.props.navigation.navigate('ManageHobbies'))
+                .then(() => this.props.navigation.navigate('UserInfo'))
                 .catch(error => this.setState({ errorMessage: error.message }))
         }
     render() {
@@ -68,7 +68,7 @@ export default class SignIn extends React.Component {
                 </View>
 
                 <TouchableOpacity style={styles.logInBtn} onPress={this.handleLogin}>
-                    <Text style={styles.logInBtn}>Log in <AntDesign name="arrowright" size={24} color="white" /> </Text>
+                    <Text style={styles.logInBtn}>Log in </Text>
                 </TouchableOpacity>
                 
                 
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
         paddingBottom:10,
         marginBottom:40,
         alignSelf:'center',
+        
         
     },
     textinput: {
