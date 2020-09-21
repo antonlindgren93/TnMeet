@@ -9,116 +9,14 @@ import SignUp from './src/screens/SignUp'
 import ManageHobbies from './src/screens/ManageHobbies'
 import * as firebase from 'firebase'
 import MainScreen from './src/screens/MainScreen'
-import { getUser } from './constants/functions'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { Ionicons } from '@expo/vector-icons';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset'
-
-
-
-
-function authUser() {
-  return new Promise(function (resolve, reject) {
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        resolve(user);
-        console.log(user.email + 'logged in')
-      } else {
-        reject('User not logged in');
-      }
-    });
-  });
-}
-function skipLogin() {
-  if (!firebase.apps.length) {
-    firebase.initializeApp(ApiKeys.FirebaseConfig);
-  }
-
-  const resetAction = StackActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'MainScreen' })],
-  })
-    .then(() => this.props.navigation.dispatch(resetAction))
-}
-
-// firebase.auth().onAuthStateChanged(function (user) {
-//   if (user) {
-//     ;
-//     console.log(user.email + 'logged in')
-
-//   } else {
-
-//   }
-// });
-
-class App extends React.Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loggedInUser: null,
-      isAuthenticated: false,
-      isAuthenticating: true,
-      isLoadingComplete: false,
-      isAuthenticationReady: false
-    };
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(ApiKeys.FirebaseConfig);
-      firebase.auth().onAuthStateChanged(this.onAuthStateChanged)
-    }
-  }
-  onAuthStateChanged = (user) => {
-    this.setState({ isAuthenticationReady: true });
-    this.setState({ isAuthenticated: !!user });
-  }
-
-
-  render() {
-
-    if (!this.state.isLoadingComplete) {
-      return (
-
-        <View>
-          <Text>Loading...</Text>
-          <AppLoading
-            onFinish={this._handleFinishLoading}
-          />
-          {/* <Button onFinish={this._handleFinishLoading} title={'Get Started'} /> */}
-
-        </View>
-      );
-
-    } else {
-      return (
-        <View style={styles.container}>
-          {(this.state.isAuthenticated) ? this.props.navigation.navigate('SignIn') : this.props.navigation.navigate('MainScreen')}
-        </View>
-      );
-    }
-  }
-  _handleFinishLoading = () => {
-    this.setState({ isLoadingComplete: true });
-  }
-
-}
-
-
 import UserInfo from './src/screens/UserInfo'
 import UserDetails from './src/screens/UserDetails'
 
 
-
-import { getUser } from './constants/functions'
-import { StackActions, NavigationActions } from 'react-navigation'
-import { Ionicons } from '@expo/vector-icons';
-import { AppLoading } from 'expo';
-import { Asset } from 'expo-asset'
-
-
-
 function authUser() {
   return new Promise(function (resolve, reject) {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -143,15 +41,6 @@ function skipLogin() {
     .then(() => this.props.navigation.dispatch(resetAction))
 }
 
-// firebase.auth().onAuthStateChanged(function (user) {
-//   if (user) {
-//     ;
-//     console.log(user.email + 'logged in')
-
-//   } else {
-
-//   }
-// });
 
 class App extends React.Component {
 
@@ -205,8 +94,6 @@ class App extends React.Component {
   }
 
 }
-
-
 
 
 const navigator = createStackNavigator({
@@ -220,8 +107,8 @@ const navigator = createStackNavigator({
 
   UserInfo: UserInfo,
   UserDetails: UserDetails,
-  
-  
+
+
 
 
 }, {
@@ -232,9 +119,7 @@ const navigator = createStackNavigator({
 
 
 }, {
-  initialRouteName: 'App',
-
-
+  initialRouteName: 'MainScreen',
   defaultNavigationOptions: {
 
   }

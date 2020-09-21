@@ -87,7 +87,10 @@ export default class ProfilePage extends React.Component {
     constructor(props) {
         super(props)
 
+ 
+
     }
+    
 
     signOut = () => {
         const resetAction = StackActions.reset({
@@ -100,6 +103,54 @@ export default class ProfilePage extends React.Component {
                 console.log('error signing out' + error)
             })
     }
+
+
+
+    fetchInfo = () => new Promise((resolve, reject) => {
+
+        var userProfile = {
+            firstname: firstname,
+            lastname: lastname,
+            description: description,
+            age: age,
+            email: firebase.auth().currentUser.email
+        }
+        if (!firebase.apps.length) {
+            firebase.initializeApp(ApiKeys.FirebaseConfig);
+        }
+        const userId = firebase.auth().currentUser.uid;
+
+        console.log(userId)
+
+       
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'UserInfo' })],
+        })
+
+
+        // firebase.database().ref(`users/${userId}`).set(userProfile)
+        //     .then(() => resolve(userProfile))
+        //     .then(() => this.props.navigation.dispatch(resetAction))
+        //     .catch(error => reject(error));
+
+        firebaseApp.database().ref('/users/' + userId).on('value', (snapshot) => {
+            const userObj = snapshot.val();
+            console.log(userObj)
+            this.userProfile.firstname = userObj.firstname;
+            this.lastname = userObj.lastname;
+            this.description = userObj.description;
+            this.age = userObj.age
+        })
+            .then(() => resolve(userProfile))
+            .then(() => this.props.navigation.dispatch(resetAction))
+            .catch(error => reject(error))
+
+
+    });
+
+
+
     render() {
         console.log(firstname, lastname)
         // useEffect(() => {
@@ -129,7 +180,7 @@ export default class ProfilePage extends React.Component {
                     <Social name="facebook-square" />
                 </View>
                 {/* </ScrollView> */}
-                <Button title="testing database" onPress={() => UpdateProfile('john', 'doe')} />
+                {/* <Button title="testing database" onPress={() => UpdateProfile('john', 'doe')} /> */}
                 <Button title='sign out' onPress={this.signOut} />
             </SafeAreaView>
         )
