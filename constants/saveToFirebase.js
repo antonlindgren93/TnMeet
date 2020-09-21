@@ -1,8 +1,10 @@
 import * as firebase from 'firebase'
+
 import React, { Component } from 'react'
 import { StackActions, NavigationActions } from 'react-navigation'
 
 const UpdateProfile = (firstname, lastname, age, description) => new Promise((resolve, reject) => {
+
 
 
 
@@ -11,6 +13,7 @@ const UpdateProfile = (firstname, lastname, age, description) => new Promise((re
     console.log(userId)
 
     var userProfile = {
+
         firstname: firstname,
         lastname: lastname,
         description: description,
@@ -29,6 +32,7 @@ const UpdateProfile = (firstname, lastname, age, description) => new Promise((re
         .then(() => this.props.navigation.dispatch(resetAction))
         .catch(error => reject(error));
         
+
 
 
 });

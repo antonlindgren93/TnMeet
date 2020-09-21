@@ -34,6 +34,7 @@ export default class SignUp extends React.Component {
         }
         const resetAction = StackActions.reset({
             index: 0,
+
             actions: [NavigationActions.navigate({ routeName: 'UserInfo' })],
         })
 
@@ -41,6 +42,19 @@ export default class SignUp extends React.Component {
             //.then(() => this.props.navigation.navigate('ManageHobbies'))
             .then(() => this.props.navigation.dispatch(resetAction))
             .catch(error => this.setState({ errorMessage: error.message}))
+
+//             actions: [NavigationActions.navigate({ routeName: 'MainScreen' })],
+//         })
+
+//         firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+
+//             //.then(() => this.props.navigation.navigate('UserInfo'))
+
+//             //.then(() => this.props.navigation.navigate('ManageHobbies'))
+//             .then(() => this.props.navigation.dispatch(resetAction))
+
+//             .catch(error => this.setState({ errorMessage: error.message }))
+
         console.log('handleSignUp')
     }
     
@@ -86,6 +100,7 @@ export default class SignUp extends React.Component {
                             //secureTextEntry
                             placeholder="Password"
                             autoCapitalize="none"
+
                             //secureTextEntry={true}
                             placeholderTextColor="#fff"
                             onChangeText={password => this.setState({ password })}
@@ -93,10 +108,16 @@ export default class SignUp extends React.Component {
                         />
                     </View>
 
+
                 <TouchableOpacity style={styles.signUpBtn}
                  onPress={this.handleSignUp}> 
                  <Text style={styles.signUpBtn}>Sign up! </Text>
                 </TouchableOpacity>
+           <TouchableOpacity style={styles.signUpBtn}
+                        onPress={this.handleSignUp}>
+                        <Text style={styles.signUpBtn}>Sign up! <AntDesign name="arrowright" size={24} color="white" /></Text>
+                    </TouchableOpacity>
+
 
                     <Text style={styles.lineStyle}>───────────── OR ─────────────</Text>
 
@@ -104,6 +125,7 @@ export default class SignUp extends React.Component {
                         <Text style={styles.signUpBtn}>
                             <FontAwesome5 style={styles.facebook} name="facebook-f" size={24} color="black" />
                      Sign up with Facebook</Text>
+
 
                     </TouchableOpacity>
 
