@@ -9,13 +9,12 @@ import SignUp from './src/screens/SignUp'
 import ManageHobbies from './src/screens/ManageHobbies'
 import * as firebase from 'firebase'
 import MainScreen from './src/screens/MainScreen'
-import { getUser } from './constants/functions'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { Ionicons } from '@expo/vector-icons';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset'
-
-
+import UserInfo from './src/screens/UserInfo'
+import UserDetails from './src/screens/UserDetails'
 
 
 function authUser() {
@@ -42,15 +41,6 @@ function skipLogin() {
     .then(() => this.props.navigation.dispatch(resetAction))
 }
 
-// firebase.auth().onAuthStateChanged(function (user) {
-//   if (user) {
-//     ;
-//     console.log(user.email + 'logged in')
-
-//   } else {
-
-//   }
-// });
 
 class App extends React.Component {
 
@@ -105,11 +95,6 @@ class App extends React.Component {
 
 }
 
-import UserInfo from './src/screens/UserInfo'
-import UserDetails from './src/screens/UserDetails'
-
-
-
 
 const navigator = createStackNavigator({
 
@@ -118,8 +103,18 @@ const navigator = createStackNavigator({
   SignUp: SignUp,
   ManageHobbies: ManageHobbies,
   MainScreen: MainScreen,
+
+
+  UserInfo: UserInfo,
+  UserDetails: UserDetails,
+
+
+
+
+}, {
+  initialRouteName: 'UserInfo',
+
   App: App,
-  UserInfo: UserInfo
 
 
 
