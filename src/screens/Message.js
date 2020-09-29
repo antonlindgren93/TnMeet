@@ -1,17 +1,17 @@
-import React from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
-import { ListItem, Avatar } from 'react-native-elements'
-import { Mess } from '../components/mess'
-import MessageDetails from '../../src/screens/MessageDetails'
-import { withNavigation } from 'react-navigation'
-import MessageRoom from '../components/MessageRoom'
-import { useNavigation } from '@react-navigation/native'
-import firebase from 'firebase'
-import 'firebase/firestore'
-import 'firebase/auth'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { firestore } from 'firebase'
+// import React from 'react'
+// import { SafeAreaView, ScrollView, StyleSheet, View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
+// import { ListItem, Avatar } from 'react-native-elements'
+// import { Mess } from '../components/mess'
+// import MessageDetails from '../../src/screens/MessageDetails'
+// import { withNavigation } from 'react-navigation'
+// import MessageRoom from '../components/MessageRoom'
+// import { useNavigation } from '@react-navigation/native'
+// import * as firebase from 'firebase'
+// import 'firebase/firestore'
+// import 'firebase/auth'
+// import { useAuthState } from 'react-firebase-hooks/auth'
+// import { useCollectionData } from 'react-firebase-hooks/firestore'
+// import { firestore } from 'firebase'
 
 
 
@@ -122,40 +122,40 @@ import { firestore } from 'firebase'
 //     }
 // })
 
-firebase.initializeApp({
+// firebase.initializeApp({
 
-})
+// })
 
-const auth = firebase.auth()
-const firestore = firebase.firestore()
-function Messages() {
-    return (
-        <View>
-            <Text>
+// const auth = firebase.auth()
+// //const firestore = firebase.firestore()
+// function Messages() {
+//     return (
+//         <View>
+//             <Text>
 
-            </Text>
-        </View>
-    )
-}
+//             </Text>
+//         </View>
+//     )
+// }
 
-function ChatRoom(){
-   const messageRef = firestore.collection('messages')
-   const query = messageRef.orderBy('createdAt').limit(25)
-   const [messages] = useCollectionData(query, {idField: 'id'})
+// function ChatRoom(){
+//    const messageRef = firestore.collection('messages')
+//    const query = messageRef.orderBy('createdAt').limit(25)
+//    const [messages] = useCollectionData(query, {idField: 'id'})
 
-   return (
-       <View>
-          {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg}/>)}
-       </View>
-   )
-}
-function ChatMessage(props){
+//    return (
+//        <View>
+//           {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg}/>)}
+//        </View>
+//    )
+// }
+// function ChatMessage(props){
 
-    return (
-        <View>
-            
-        </View>
-    )
-}
+//     return (
+//         <View>
+//             <Text>hello messages</Text>
+//         </View>
+//     )
+// }
 
-export default Messages
+// export default Messages

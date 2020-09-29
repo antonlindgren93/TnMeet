@@ -11,6 +11,7 @@ import MessageDetails from '../src/screens/MessageDetails'
 import * as firebase from 'firebase'
 import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 import { LinearGradient } from 'expo-linear-gradient';
+import UserInfo from '../src/screens/UserInfo'
 
 
 const Stack = createStackNavigator();
@@ -218,35 +219,36 @@ const MessageDetailsStackNavigator = ({ navigation }) => {
 
 
 
-// const PoddStackNavigator = ({ navigation }) => {
-//     return (
-//         <Stack.Navigator screenOptions={screenOptionStyle}>
-//             <Stack.Screen name="Podd" component={Podd} options={{
-//                 headerRight: () => (
-//                     <TouchableOpacity onPress={navigation.openDrawer}>
-//                         {/*Donute Button Image */}
-//                         <MaterialCommunityIcons name="menu" size={32} color="white" style={{ marginRight: 10 }} />
-//                     </TouchableOpacity>
-//                 ),
-//                 headerTitleStyle: {
-//                     alignSelf: 'center'
-//                 },
-//                 headerLeft: () => (
-//                     <TouchableOpacity onPress={() => {
-//                         navigation.navigate("Home")
-//                     }} >
-//                         <MaterialCommunityIcons name="chevron-left"
-//                             style={{ marginLeft: 10 }}
-//                             size={32} color='white'
-//                         />
-//                     </TouchableOpacity>
-//                 )
-//             }} />
-//         </Stack.Navigator>
-//     );
-// };
+const UserInfoStackNavigator = ({ navigation }) => {
+    return (
+        <Stack.Navigator screenOptions={screenOptionStyle}>
+            <Stack.Screen name="UserInfo" component={UserInfo} options={{
+                headerRight: () => (
+                    <TouchableOpacity onPress={navigation.openDrawer}>
+                        {/*Donute Button Image */}
+                        <MaterialCommunityIcons name="menu" size={32} color="white" style={{ marginRight: 10 }} />
+                    </TouchableOpacity>
+                ),
+                headerTitleStyle: {
+                    alignSelf: 'center'
+                },
+                headerLeft: () => (
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate("Home")
+                    }} >
+                        <MaterialCommunityIcons name="chevron-left"
+                            style={{ marginLeft: 10 }}
+                            size={32} color='white'
+                        />
+                    </TouchableOpacity>
+                )
+            }} />
+            <Stack.Screen name="Explore" component={Explore} />
+        </Stack.Navigator>
+    );
+};
 
 
 
-export { ProfileStackNavigator, MessageStackNavigator, ExploreStackNavigator, SignInStackNavigator, MessageDetailsStackNavigator};
+export { ProfileStackNavigator, MessageStackNavigator, ExploreStackNavigator, SignInStackNavigator, MessageDetailsStackNavigator, UserInfoStackNavigator};
 // export { MainStackNavigator, RecipeStackNavigator, TrainingStackNavigator, DiaryStackNavigator, AboutStackNavigator, BookUsStackNavigator, PoddStackNavigator, };

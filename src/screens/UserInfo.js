@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, StyleSheet, View, Image, ScrollView, TouchableOpacity, TextInput, Button,Alert } from 'react-native'
+import { Text, StyleSheet, View, Image, ScrollView, TouchableOpacity, TextInput, Button, Alert } from 'react-native'
 import ApiKeys from '../../Apis/ApiKeys'
 import * as firebase from 'firebase'
 
@@ -8,25 +8,26 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons'; 
-import { MaterialIcons } from '@expo/vector-icons'; 
-import { Entypo } from '@expo/vector-icons'; 
+import { EvilIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
 import { render } from 'react-dom'
 import { set } from 'react-native-reanimated'
 import { v4 as uuidv4 } from 'uuid';
-//import saveToFirebase from '../../constants/saveToFirebase'
+import saveToFirebase from '../../constants/saveToFirebase'
 import { getUser } from '../../constants/functions'
 
 import * as ImagePicker from 'expo-image-picker'
-import Header from '../components/header' 
+import Header from '../components/header'
 import { StatusBar } from 'expo-status-bar';
 import * as Permissions from 'expo-permissions'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DateComponent from '../components/DateComponent'
 
 import { StackActions, NavigationActions } from 'react-navigation'
+import DrawerNavigator from '../../navigation/DrawerNavigation'
 
 
 const storage = firebase.storage()
@@ -40,87 +41,80 @@ export default class UserInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
-            
-
             firstname: '',
             lastname: '',
             description: '',
             age: '',
-            image:require('../../assets/profileImageTN2.png'),
-            
-            
-            
+            image: require('../../assets/profileImageTN2.png'),
         })
 
         getUser()
     }
 
-    
 
-   
-    
+
+
+
     // this.setState({user:{ ...this.state.user, image: resultFromLibrary.uri}})
-    
 
-    onTakePicturePress = async() => {
-        
+
+    onTakePicturePress = async () => {
+
         let resultFromCamera = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
-            aspect: [4,3]
+            aspect: [4, 3]
         });
         if (!resultFromCamera.cancelled) {
-            this.uploadImage(resultFromCamera.uri,"Camera")
+            this.uploadImage(resultFromCamera.uri, "Camera")
 
             this.setState({
                 image: resultFromCamera
             })
-            
-            .then(() => {
 
-                Alert.alert("Uploaded from camera!")
-                
+                .then(() => {
 
-            }).catch((error) => {
-                
-            })
+                    Alert.alert("Uploaded from camera!")
+
+
+                }).catch((error) => {
+
+                })
         }
-        
-        
+
+
     }
 
     saveToFirebase = (firstname, lastname, age, description) => new Promise((resolve, reject) => {
         const userId = firebase.auth().currentUser.uid;
-
         console.log(userId)
         var userProfile = {
-
             firstname: firstname,
             lastname: lastname,
             description: description,
             age: age,
             email: firebase.auth().currentUser.email
-
         };
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
+            actions: [NavigationActions.navigate({ routeName: 'Explore' })],
         })
 
 
         firebase.database().ref(`users/${userId}`).set(userProfile)
             .then(() => resolve(userProfile))
-            .then(() => this.props.navigation.dispatch(resetAction))
+            //.then(() => this.props.navigation.dispatch(resetAction))
+            .then(() => navigation.navigate("Explore"))
             .catch(error => reject(error));
 
 
     });
 
-//SET STATE IN THIS FUNCTION
-    onChooseImagePress = async() => {
-        
+    //SET STATE IN THIS FUNCTION
+    onChooseImagePress = async () => {
+
         let resultFromLibrary = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
-            aspect: [4,3]
+            aspect: [4, 3]
         });
         if (!resultFromLibrary.cancelled) {
             this.uploadImage(resultFromLibrary.uri, "Library")
@@ -128,65 +122,65 @@ export default class UserInfo extends React.Component {
             this.setState({
                 image: resultFromLibrary
             })
-            
-            .then(() => {
-                
-                
-                Alert.alert("Success!")
-                
 
-            }).catch((error) => {
-                Alert.alert('Error:', error.message)
-            })
+                .then(() => {
+
+
+                    Alert.alert("Success!")
+
+
+                }).catch((error) => {
+                    Alert.alert('Error:', error.message)
+                })
         }
 
-        
+
     }
 
-    uploadImage = async(uri, imageName) => {
+    uploadImage = async (uri, imageName) => {
         const response = await fetch(uri)
         const blob = await response.blob()
 
         var ref = firebase.storage().ref().child("images/" + imageName)
 
-       
-        
-        
+
+
+
         return ref.put(blob)
         console.log("image uploaded!")
 
     }
 
-    
+
 
     downloadImage = () => {
-        storageRef.child('images/' + imageName).getDownloadURL().then(function(url) {
+        storageRef.child('images/' + imageName).getDownloadURL().then(function (url) {
             // `url` is the download URL for 'images/stars.jpg'
-           console.log('This is the url for the image ' + url)
-           
-          }).catch(function(error) {
+            console.log('This is the url for the image ' + url)
+
+        }).catch(function (error) {
             // Handle any errors
-            
-          });
+
+        });
     }
 
 
     render() {
         return (
 
-            
+
             <LinearGradient colors={['#aac7cb', '#84d8e6', '#0ddafa']}
                 style={styles.linearGradient}
                 locations={[0, 0.5, 1]}
                 useAngle={true} angle={45}
                 angleCenter={{ x: 0.5, y: 0.5 }}>
-                    
-                    
+
+
                 <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-                   
-                    
+
+
                     <View style={styles.container}>
-                    {/* <TouchableOpacity style={styles.profilePlaceholder} onPress={this.onTakePicturePress}>
+                        {/* <TouchableOpacity style={styles.profilePlaceholder} onPress={this.onTakePicturePress}>
                        
                         <Image soure={{uri : this.state.image}} style={styles.profilImage}/>
 
@@ -195,27 +189,27 @@ export default class UserInfo extends React.Component {
                     </TouchableOpacity> */}
 
 
-                    {/* require('../../assets/profileImageTN.png') */}
-                   
-        
-                    
-                    <Image source={this.state.image} style={styles.profilePlaceholder}/>
-                    
-                   
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> 
+                        {/* require('../../assets/profileImageTN.png') */}
 
-                    <TouchableOpacity style={styles.camera} onPress={this.onTakePicturePress}>
-                    <Entypo name="camera" size={24} color="white" />
-                    </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.library} onPress={this.onChooseImagePress}>
-                    <MaterialIcons name="photo-library" size={24} color="white" />
-                    </TouchableOpacity>
-                    
-                    </View>
 
-                    
-                        
+                        <Image source={this.state.image} style={styles.profilePlaceholder} />
+
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+
+                            <TouchableOpacity style={styles.camera} onPress={this.onTakePicturePress}>
+                                <Entypo name="camera" size={24} color="white" />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.library} onPress={this.onChooseImagePress}>
+                                <MaterialIcons name="photo-library" size={24} color="white" />
+                            </TouchableOpacity>
+
+                        </View>
+
+
+
                         <Text style={styles.header}>About you</Text>
                         <TextInput
                             style={styles.textinput}
@@ -245,7 +239,7 @@ export default class UserInfo extends React.Component {
 
                         />
 
-                        
+
                         <TextInput style={styles.textField}
                             placeholder='Write something about youself...'
                             placeholderTextColor='#000'
@@ -254,7 +248,7 @@ export default class UserInfo extends React.Component {
 
                         />
 
-                        
+
                         <DateComponent />
 
                         <TouchableOpacity style={styles.countinueBtn}
@@ -336,30 +330,30 @@ const styles = StyleSheet.create({
     },
     profileImage: {
         resizeMode: 'contain',
-        width:150,
-        height:150,
+        width: 150,
+        height: 150,
         backgroundColor: 'transparent',
-        backfaceVisibility:'hidden',
+        backfaceVisibility: 'hidden',
 
     },
     camera: {
-        paddingRight:'40%'
+        paddingRight: '40%'
     },
     profilePlaceholder: {
-        width:150,
-        height:150,
+        width: 150,
+        height: 150,
         borderRadius: 75,
-        backgroundColor:'#E1E2E6',
+        backgroundColor: '#E1E2E6',
         marginTop: 48,
         justifyContent: 'center',
-        alignItems:'center'
+        alignItems: 'center'
     },
-    
-    iconPlaceholder:{
-        width:220,
-        height:175,
+
+    iconPlaceholder: {
+        width: 220,
+        height: 175,
         justifyContent: 'center',
-        alignItems:'center'
+        alignItems: 'center'
     }
 })
 
