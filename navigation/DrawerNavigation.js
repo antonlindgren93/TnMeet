@@ -48,6 +48,7 @@ const DrawerNavigator = () => {
             <Drawer.Screen name="Podd" component={PoddStackNavigator} /> */}
             <Drawer.Screen name="Logga ut" component={LogOut} />
         </Drawer.Navigator >
+       
 
     );
 };

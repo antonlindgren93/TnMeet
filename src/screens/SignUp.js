@@ -32,7 +32,7 @@ export default class SignUp extends React.Component {
         if (!firebase.apps.length) {
             firebase.initializeApp(ApiKeys.FirebaseConfig);
         }
-        const resetAction = StackActions.reset({
+        var resetAction = StackActions.reset({
             index: 0,
 
             actions: [NavigationActions.navigate({ routeName: 'UserInfo' })],

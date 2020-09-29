@@ -4,30 +4,19 @@ import ApiKeys from '../../Apis/ApiKeys'
 import * as firebase from 'firebase'
 
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-
-import { render } from 'react-dom'
-import { set } from 'react-native-reanimated'
-import { v4 as uuidv4 } from 'uuid';
 import saveToFirebase from '../../constants/saveToFirebase'
 import { getUser } from '../../constants/functions'
-
 import * as ImagePicker from 'expo-image-picker'
-import Header from '../components/header'
 import { StatusBar } from 'expo-status-bar';
 import * as Permissions from 'expo-permissions'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DateComponent from '../components/DateComponent'
-
 import { StackActions, NavigationActions } from 'react-navigation'
 import DrawerNavigator from '../../navigation/DrawerNavigation'
+import { ProfileStackNavigator } from '../../navigation/StackNavigation';
+import SignUpNavigation from '../../navigation/SignUpNavigationDrawer'
 
 
 const storage = firebase.storage()
@@ -51,12 +40,7 @@ export default class UserInfo extends React.Component {
         getUser()
     }
 
-
-
-
-
     // this.setState({user:{ ...this.state.user, image: resultFromLibrary.uri}})
-
 
     onTakePicturePress = async () => {
 
@@ -84,7 +68,7 @@ export default class UserInfo extends React.Component {
 
     }
 
-    saveToFirebase = (firstname, lastname, age, description) => new Promise((resolve, reject) => {
+    UpdateToFirebase = (firstname, lastname, age, description) => new Promise((resolve, reject) => {
         const userId = firebase.auth().currentUser.uid;
         console.log(userId)
         var userProfile = {
@@ -96,14 +80,14 @@ export default class UserInfo extends React.Component {
         };
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Explore' })],
+            actions: [NavigationActions.navigate({ routeName: 'SignUpNavigationDrawer' })],
         })
 
 
         firebase.database().ref(`users/${userId}`).set(userProfile)
             .then(() => resolve(userProfile))
-            //.then(() => this.props.navigation.dispatch(resetAction))
-            .then(() => navigation.navigate("Explore"))
+            .then(() => this.props.navigation.dispatch(resetAction))
+            //.then(() => navigation.navigate("Explore"))
             .catch(error => reject(error));
 
 
@@ -252,9 +236,7 @@ export default class UserInfo extends React.Component {
                         <DateComponent />
 
                         <TouchableOpacity style={styles.countinueBtn}
-
-                            onPress={() => saveToFirebase(
-
+                            onPress={() => this.UpdateToFirebase(
                                 this.state.firstname,
                                 this.state.lastname,
                                 this.state.age,
