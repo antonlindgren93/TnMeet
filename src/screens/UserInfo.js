@@ -16,14 +16,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { render } from 'react-dom'
 import { set } from 'react-native-reanimated'
 import { v4 as uuidv4 } from 'uuid';
-import saveToFirebase from '../../constants/saveToFirebase'
+//import saveToFirebase from '../../constants/saveToFirebase'
 import { getUser } from '../../constants/functions'
+
 import * as ImagePicker from 'expo-image-picker'
 import Header from '../components/header' 
 import { StatusBar } from 'expo-status-bar';
 import * as Permissions from 'expo-permissions'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DateComponent from '../components/DateComponent'
+
+import { StackActions, NavigationActions } from 'react-navigation'
 
 
 const storage = firebase.storage()
@@ -51,6 +54,7 @@ export default class UserInfo extends React.Component {
 
         getUser()
     }
+
     
 
    
@@ -84,6 +88,32 @@ export default class UserInfo extends React.Component {
         
     }
 
+    saveToFirebase = (firstname, lastname, age, description) => new Promise((resolve, reject) => {
+        const userId = firebase.auth().currentUser.uid;
+
+        console.log(userId)
+        var userProfile = {
+
+            firstname: firstname,
+            lastname: lastname,
+            description: description,
+            age: age,
+            email: firebase.auth().currentUser.email
+
+        };
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
+        })
+
+
+        firebase.database().ref(`users/${userId}`).set(userProfile)
+            .then(() => resolve(userProfile))
+            .then(() => this.props.navigation.dispatch(resetAction))
+            .catch(error => reject(error));
+
+
+    });
 
 //SET STATE IN THIS FUNCTION
     onChooseImagePress = async() => {
@@ -228,7 +258,9 @@ export default class UserInfo extends React.Component {
                         <DateComponent />
 
                         <TouchableOpacity style={styles.countinueBtn}
+
                             onPress={() => saveToFirebase(
+
                                 this.state.firstname,
                                 this.state.lastname,
                                 this.state.age,
