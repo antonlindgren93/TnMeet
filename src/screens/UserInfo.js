@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, StyleSheet, View, Image, ScrollView, TouchableOpacity, TextInput, Button } from 'react-native'
+import { Text, StyleSheet, View, Image, ScrollView, TouchableOpacity, TextInput, Button,Alert } from 'react-native'
 import ApiKeys from '../../Apis/ApiKeys'
 import * as firebase from 'firebase'
 
@@ -8,84 +8,184 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { EvilIcons } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons';
+
 import { render } from 'react-dom'
 import { set } from 'react-native-reanimated'
 import { v4 as uuidv4 } from 'uuid';
 import saveToFirebase from '../../constants/saveToFirebase'
 import { getUser } from '../../constants/functions'
+import * as ImagePicker from 'expo-image-picker'
+import Header from '../components/header' 
+import { StatusBar } from 'expo-status-bar';
+import * as Permissions from 'expo-permissions'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateComponent from '../components/DateComponent'
+
+
+const storage = firebase.storage()
+const pathReference = storage.ref('images/test-image')
+
 
 export default class UserInfo extends React.Component {
 
 
 
-
-    // const user = firebase.auth().currentUser;
-
-
     constructor(props) {
         super(props);
         this.state = ({
+            
+
             firstname: '',
             lastname: '',
             description: '',
-            age: ''
+            age: '',
+            image:require('../../assets/profileImageTN2.png'),
+            
+            
+            
         })
 
         getUser()
     }
+    
+
+   
+    
+    // this.setState({user:{ ...this.state.user, image: resultFromLibrary.uri}})
+    
+
+    onTakePicturePress = async() => {
+        
+        let resultFromCamera = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4,3]
+        });
+        if (!resultFromCamera.cancelled) {
+            this.uploadImage(resultFromCamera.uri,"Camera")
+
+            this.setState({
+                image: resultFromCamera
+            })
+            
+            .then(() => {
+
+                Alert.alert("Uploaded from camera!")
+                
+
+            }).catch((error) => {
+                
+            })
+        }
+        
+        
+    }
 
 
+//SET STATE IN THIS FUNCTION
+    onChooseImagePress = async() => {
+        
+        let resultFromLibrary = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [4,3]
+        });
+        if (!resultFromLibrary.cancelled) {
+            this.uploadImage(resultFromLibrary.uri, "Library")
 
+            this.setState({
+                image: resultFromLibrary
+            })
+            
+            .then(() => {
+                
+                
+                Alert.alert("Success!")
+                
 
+            }).catch((error) => {
+                Alert.alert('Error:', error.message)
+            })
+        }
 
-    // writeUserData(firstname,lastname,age,description){
-    //     firebase.database().ref('users/').update({
-    //         firstname,
-    //         lastname,
-    //         age,
-    //         description
-    //     }).then((data) =>{
-    //         console.log('data',data)
-    //     }).catch((error) => {
-    //         console.log('error',error)
-    //     })
+        
+    }
 
-    // }
+    uploadImage = async(uri, imageName) => {
+        const response = await fetch(uri)
+        const blob = await response.blob()
 
+        var ref = firebase.storage().ref().child("images/" + imageName)
 
-    // componentWillMount() {
+       
+        
+        
+        return ref.put(blob)
+        console.log("image uploaded!")
 
-    //     var firebaseConfig = {
-    //         apiKey: "AIzaSyBLa_ZYbonagomDv-0KmdoBI0N2Up0RJCY",
-    //         authDomain: "tnmeet-8f6c5.firebaseapp.com",
-    //         databaseURL: "https://tnmeet-8f6c5.firebaseio.com",
-    //         projectId: "tnmeet-8f6c5",
-    //         storageBucket: "tnmeet-8f6c5.appspot.com",
-    //         messagingSenderId: "919756033010",
-    //         appId: "1:919756033010:web:76c7c667bc833dd167396b",
-    //         measurementId: "G-QKEWP68WMX"
-    //     };
+    }
 
-    //     if (!firebase.apps.length) {
-    //         firebase.initializeApp(firebaseConfig);
-    //     }
+    
 
-
-    // }
+    downloadImage = () => {
+        storageRef.child('images/' + imageName).getDownloadURL().then(function(url) {
+            // `url` is the download URL for 'images/stars.jpg'
+           console.log('This is the url for the image ' + url)
+           
+          }).catch(function(error) {
+            // Handle any errors
+            
+          });
+    }
 
 
     render() {
         return (
+
+            
             <LinearGradient colors={['#aac7cb', '#84d8e6', '#0ddafa']}
                 style={styles.linearGradient}
                 locations={[0, 0.5, 1]}
                 useAngle={true} angle={45}
                 angleCenter={{ x: 0.5, y: 0.5 }}>
+                    
+                    
                 <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-
+                   
+                    
                     <View style={styles.container}>
+                    {/* <TouchableOpacity style={styles.profilePlaceholder} onPress={this.onTakePicturePress}>
+                       
+                        <Image soure={{uri : this.state.image}} style={styles.profilImage}/>
 
-                        <Image source={require('../../assets/tnmeetlogo.png')} />
+                    <Ionicons name="ios-add" size={60} color="white"  />
+
+                    </TouchableOpacity> */}
+
+
+                    {/* require('../../assets/profileImageTN.png') */}
+                   
+        
+                    
+                    <Image source={this.state.image} style={styles.profilePlaceholder}/>
+                    
+                   
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> 
+
+                    <TouchableOpacity style={styles.camera} onPress={this.onTakePicturePress}>
+                    <Entypo name="camera" size={24} color="white" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.library} onPress={this.onChooseImagePress}>
+                    <MaterialIcons name="photo-library" size={24} color="white" />
+                    </TouchableOpacity>
+                    
+                    </View>
+
+                    
+                        
                         <Text style={styles.header}>About you</Text>
                         <TextInput
                             style={styles.textinput}
@@ -114,6 +214,8 @@ export default class UserInfo extends React.Component {
                             keyboardType="number-pad"
 
                         />
+
+                        
                         <TextInput style={styles.textField}
                             placeholder='Write something about youself...'
                             placeholderTextColor='#000'
@@ -122,14 +224,10 @@ export default class UserInfo extends React.Component {
 
                         />
 
+                        
+                        <DateComponent />
 
                         <TouchableOpacity style={styles.countinueBtn}
-                            // onPress={() => this.writeUserData(
-                            //     this.state.firstname,
-                            //     this.state.lastname,
-                            //     this.state.age,
-                            //     this.state.description)}
-                            //     > 
                             onPress={() => saveToFirebase(
                                 this.state.firstname,
                                 this.state.lastname,
@@ -203,11 +301,33 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         textAlignVertical: 'top',
+    },
+    profileImage: {
+        resizeMode: 'contain',
+        width:150,
+        height:150,
+        backgroundColor: 'transparent',
+        backfaceVisibility:'hidden',
 
-
-
-
+    },
+    camera: {
+        paddingRight:'40%'
+    },
+    profilePlaceholder: {
+        width:150,
+        height:150,
+        borderRadius: 75,
+        backgroundColor:'#E1E2E6',
+        marginTop: 48,
+        justifyContent: 'center',
+        alignItems:'center'
+    },
+    
+    iconPlaceholder:{
+        width:220,
+        height:175,
+        justifyContent: 'center',
+        alignItems:'center'
     }
-
 })
 
