@@ -9,6 +9,8 @@ import UserInfo from '../src/screens/UserInfo';
 import ProfileScreen from '../src/screens/ProfileScreen'
 import TabNavigation from '../navigation/Tabnavigation'
 import DrawerNavigation from '../navigation/DrawerNavigation'
+import { ProfileStackNavigator } from './StackNavigation';
+import SignUpNavigationDrawer from './SignUpNavigationDrawer'
 
 // import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 // import HomeScreen from '../screens/Home';
@@ -23,7 +25,9 @@ const RootNavigation = createStackNavigator(
         UserInfo: UserInfo,
         ProfileScreen: ProfileScreen,
         TabNavigation: TabNavigation,
-        DrawerNavigation: DrawerNavigation
+        DrawerNavigation: DrawerNavigation,
+        ProfileStackNavigator: ProfileStackNavigator,
+        SignUpNavigationDrawer: SignUpNavigationDrawer
         // ForgotPassword: ForgotPasswordScreen,
     },
     {
