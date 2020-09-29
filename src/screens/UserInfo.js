@@ -11,8 +11,9 @@ import { Feather } from '@expo/vector-icons';
 import { render } from 'react-dom'
 import { set } from 'react-native-reanimated'
 import { v4 as uuidv4 } from 'uuid';
-import saveToFirebase from '../../constants/saveToFirebase'
+//import saveToFirebase from '../../constants/saveToFirebase'
 import { getUser } from '../../constants/functions'
+import { StackActions, NavigationActions } from 'react-navigation'
 
 export default class UserInfo extends React.Component {
 
@@ -33,7 +34,31 @@ export default class UserInfo extends React.Component {
 
         getUser()
     }
+    saveToFirebase = (firstname, lastname, age, description) => new Promise((resolve, reject) => {
+        const userId = firebase.auth().currentUser.uid;
 
+        console.log(userId)
+        var userProfile = {
+
+            firstname: firstname,
+            lastname: lastname,
+            description: description,
+            age: age,
+            email: firebase.auth().currentUser.email
+
+        };
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
+        })
+
+
+        firebase.database().ref(`users/${userId}`).set(userProfile)
+            .then(() => resolve(userProfile))
+            .then(() => this.props.navigation.dispatch(resetAction))
+            .catch(error => reject(error));
+
+    });
 
 
 
@@ -124,13 +149,7 @@ export default class UserInfo extends React.Component {
 
 
                         <TouchableOpacity style={styles.countinueBtn}
-                            // onPress={() => this.writeUserData(
-                            //     this.state.firstname,
-                            //     this.state.lastname,
-                            //     this.state.age,
-                            //     this.state.description)}
-                            //     > 
-                            onPress={() => saveToFirebase(
+                            onPress={() => this.saveToFirebase(
                                 this.state.firstname,
                                 this.state.lastname,
                                 this.state.age,

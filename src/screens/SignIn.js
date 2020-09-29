@@ -2,17 +2,23 @@ import React from 'react'
 import { Text, StyleSheet, View, Image, ScrollView, TouchableOpacity, TextInput, TextInpu, Button } from 'react-native'
 import ApiKeys from '../../Apis/ApiKeys'
 import * as firebase from 'firebase'
-
+import { withNavigation } from 'react-navigation'
+import { StackNavigator } from 'react-navigation'
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import MainScreen from './MainScreen'
+
 import { StackActions, NavigationActions } from 'react-navigation'
+import TabNavigation from '../../navigation/Tabnavigation'
+import { createStackNavigator } from 'react-navigation-stack'
+import { ExploreStackNavigator } from '../../navigation/StackNavigation'
+import { useNavigation } from '@react-navigation/native'
+
 
 export default class SignIn extends React.Component {
-
+  
     constructor(props) {
         super(props)
         this.state = {
@@ -20,9 +26,19 @@ export default class SignIn extends React.Component {
             isAuthenticated: false,
             isAuthenticating: true
         }
+        //   const navigation = useNavigation()
     }
 
-
+    handleGoogleLogIn = () => {
+     const provider = new firebase.auth.GoogleAuthProvider() ;
+     //firebase.auth.signInWithEmailAndPassword(provider) 
+     firebase.auth.signInWithPopup(provider)
+    }
+    // handleSignOutWithGoogle = () => {
+    //     return firebase.auth().currentUser && ()
+    // }
+   
+   
 
     handleLogin = () => {
 
@@ -33,18 +49,19 @@ export default class SignIn extends React.Component {
 
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'MainScreen' })],
+            key: null,
+            actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
         })
         firebase
             .auth()
             .signInWithEmailAndPassword(this.state.email, this.state.password)
-            //.then(() => this.props.navigation.navigate('MainScreen'))
+           // .then(() => this.props.navigation.navigate('TabNavigation'))
             .then(() => this.props.navigation.dispatch(resetAction))
             .catch(error => this.setState({ errorMessage: error.message }))
     }
 
     render() {
-     
+
         return (
 
             <LinearGradient colors={['#aac7cb', '#84d8e6', '#0ddafa']}
@@ -84,20 +101,11 @@ export default class SignIn extends React.Component {
                     </View>
 
 
-                <TouchableOpacity style={styles.logInBtn} onPress={this.handleLogin}>
-                    <Text style={styles.logInBtn}>Log in </Text>
-                </TouchableOpacity>
-                
-                
-                <Text style={styles.lineStyle}>───────────── OR ─────────────</Text>
-
                     <TouchableOpacity style={styles.logInBtn} onPress={this.handleLogin}>
-                        <Text style={styles.logInBtn}>Log in <AntDesign name="arrowright" size={24} color="white" /> </Text>
+                        <Text style={styles.logInBtn}>Log in </Text>
                     </TouchableOpacity>
 
-
-
-                    <Text style={styles.lineStyle}>───────────── OR ─────────────</Text>
+                    <Text style={styles.lineStyle}></Text>
 
 
                     <TouchableOpacity style={styles.logInBtn}>

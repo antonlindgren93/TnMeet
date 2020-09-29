@@ -1,20 +1,14 @@
 import { createStackNavigator } from 'react-navigation-stack'
 import { createAppContainer } from 'react-navigation'
-import SignIn from './src/screens/SignIn'
 import ApiKeys from './Apis/ApiKeys'
 import React from 'react'
-import { Text, View, StyleSheet, Platform, StatusBar, Button } from 'react-native'
-import LoadingScreen from './src/screens/LoadingScreen'
-import SignUp from './src/screens/SignUp'
-import ManageHobbies from './src/screens/ManageHobbies'
+import { Text, View, StyleSheet, Platform, StatusBar, Button, ActivityIndicator } from 'react-native'
 import * as firebase from 'firebase'
-import MainScreen from './src/screens/MainScreen'
 import { StackActions, NavigationActions } from 'react-navigation'
-import { Ionicons } from '@expo/vector-icons';
-import { AppLoading } from 'expo';
-import { Asset } from 'expo-asset'
-import UserInfo from './src/screens/UserInfo'
-import UserDetails from './src/screens/UserDetails'
+import RootNavigation from './navigation/RootNavigation'
+import DrawerNavigation from './navigation/DrawerNavigation'
+import { NavigationContainer } from '@react-navigation/native'
+import { SignInStackNavigator } from './navigation/StackNavigation'
 
 
 function authUser() {
@@ -42,7 +36,7 @@ function skipLogin() {
 }
 
 
-class App extends React.Component {
+export default class App extends React.Component {
 
   constructor(props) {
     super(props);
@@ -61,79 +55,77 @@ class App extends React.Component {
     }
   }
   onAuthStateChanged = (user) => {
+    console.log(user)
     this.setState({ isAuthenticationReady: true });
     this.setState({ isAuthenticated: !!user });
   }
 
-
   render() {
 
-    if (!this.state.isLoadingComplete) {
-      return (
+    // if ((!this.state.isLoadingComplete || !this.state.isAuthenticated)) {
+    //   return (
 
-        <View>
-          <Text>Loading...</Text>
-          <AppLoading
-            onFinish={this._handleFinishLoading}
-          />
-          {/* <Button onFinish={this._handleFinishLoading} title={'Get Started'} /> */}
+    //     <View style={styles.container}>
 
-        </View>
-      );
+    //       {/* {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+    //       {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />} */}
 
-    } else {
-      return (
-        <View style={styles.container}>
-          {(this.state.isAuthenticated) ? this.props.navigation.navigate('SignIn') : this.props.navigation.navigate('MainScreen')}
-        </View>
-      );
-    }
+    //       <ActivityIndicator size="large" color="#0000ff" />
+    //       {/* <RootNavigation /> */}
+    //     </View>
+
+    //   );
+    // } else {
+    return (
+
+      <View style={styles.container}>
+        {(this.state.isAuthenticated) ? <NavigationContainer>
+          <DrawerNavigation />
+        </NavigationContainer> : <RootNavigation />}
+        {/* {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />}
+
+          */}
+
+
+      </View>
+    );
   }
-  _handleFinishLoading = () => {
-    this.setState({ isLoadingComplete: true });
-  }
-
+}
+//}
+_handleFinishLoading = () => {
+  this.setState({ isLoadingComplete: true });
 }
 
-
-const navigator = createStackNavigator({
-
-  SignIn: SignIn,
-  LoadingScreen: LoadingScreen,
-  SignUp: SignUp,
-  ManageHobbies: ManageHobbies,
-  MainScreen: MainScreen,
+// }
 
 
-  UserInfo: UserInfo,
-  UserDetails: UserDetails,
+// const navigator = createStackNavigator({
 
+//   SignIn: SignIn,
+//   LoadingScreen: LoadingScreen,
+//   SignUp: SignUp,
+//   ManageHobbies: ManageHobbies,
+//   MainScreen: MainScreen,
+//   Message: Message,
+//   UserInfo: UserInfo,
+//   UserDetails: UserDetails,
+//   App: App,
+//   DrawerScreen: DrawerScreen
+// }, {
+//   initialRouteName: 'App',
+// })
 
-
-
-}, {
-  initialRouteName: 'UserInfo',
-
-  App: App,
-
-
-
-}, {
-  initialRouteName: 'MainScreen',
-  defaultNavigationOptions: {
-
-  }
-})
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    justifyContent: 'center',
   },
-  statusBarUnderlay: {
-    height: 24,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
   },
 })
 
-export default createAppContainer(navigator)
-
+// export default createAppContainer(navigator)

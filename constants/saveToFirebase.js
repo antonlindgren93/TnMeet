@@ -23,7 +23,7 @@ const UpdateProfile = (firstname, lastname, age, description) => new Promise((re
     };
     const resetAction = StackActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'UserInfo' })],
+        actions: [NavigationActions.navigate({ routeName: 'MainScreen' })],
     })
 
 
@@ -31,7 +31,7 @@ const UpdateProfile = (firstname, lastname, age, description) => new Promise((re
         .then(() => resolve(userProfile))
         .then(() => this.props.navigation.dispatch(resetAction))
         .catch(error => reject(error));
-        
+
 
 
 

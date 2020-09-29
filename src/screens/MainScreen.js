@@ -7,6 +7,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import ProfileComponent from '../components/ProfileComponent'
 import * as firebase from 'firebase'
 import AuthenticateUser from '../../constants/authentication'
+import Drawer from "../../navigation/DrawerNavigation"
 
 class DetailsScreen extends React.Component {
     render() {
@@ -96,6 +97,7 @@ class ProfileScreen extends React.Component {
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 {/* other code from before here */}
                 <ProfileComponent />
+                <Drawer />
                 {/* <Button
                     title="edit profile..."
                     onPress={() => this.props.navigation.navigate('Details')}

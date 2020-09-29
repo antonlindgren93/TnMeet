@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, Button, ScrollView, Image, TouchableOpacity, SafeAreaView }
+import { Flatlist, View, Text, StyleSheet, Button, ScrollView, Image, TouchableOpacity, SafeAreaView }
     from 'react-native'
 import * as firebase from 'firebase'
 import ApiKeys from '../../Apis/ApiKeys'
@@ -10,6 +10,9 @@ import Layout from '../../constants/Layout'
 import { AppLoading } from 'expo';
 import { getUser, signOut } from '../../constants/functions'
 import { StackActions, NavigationActions } from 'react-navigation'
+import { SocialIcon } from 'react-native-elements'
+import { FlatList } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 
@@ -57,19 +60,11 @@ const UpdateProfile = (firstname, lastname) => new Promise((resolve, reject) => 
     firebase.database().ref(`users/${userId}`).set(userProfile)
         .then(() => resolve(userProfile))
         .catch(error => reject(error));
-
 });
-// const userId = firebase.auth().currentUser.uid;
-// firebase.database().ref(`users/${userId}`).on('value', (snap) => {
-//     console.log(snap.val());
-//     console.log(snap.val().lastname, snap.val().firstname)
-//     firstname = snap.val().lastname
-//     lastname = snap.val().firstname
-// })
 
 const randomNo = (min, max) =>
     Math.floor(Math.random() * (max - min) + min)
-const pics = [require('../../assets/profile.jpg'), require('../../assets/im.jpg')]
+const pics = [require('../../assets/ana.jpg'), require('../../assets/ana.jpg')]
 const Social = ({ name }) => (
     <Icon
         name={name}
@@ -80,17 +75,37 @@ const Social = ({ name }) => (
 )
 const pic = pics[randomNo(1, pics.length)]
 
-
 export default class ProfilePage extends React.Component {
+    _isMounted = false;
 
 
     constructor(props) {
         super(props)
-
- 
-
+        this.state = {
+            res: []
+        }
     }
-    
+
+    componentDidMount() {
+
+        _mounted = true
+        firebase.auth().onAuthStateChanged((user) => {
+            _mounted
+            if (user != null) {
+                const userId = firebase.auth().currentUser.uid
+                firebase.database().ref('/users/' + userId).on('value', (snapshot) => {
+                    const res = snapshot.val()
+
+                    this.setState({ res })
+                    console.log(this.state.res.lastname)
+                })
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
 
     signOut = () => {
         const resetAction = StackActions.reset({
@@ -104,85 +119,64 @@ export default class ProfilePage extends React.Component {
             })
     }
 
-
-
-    fetchInfo = () => new Promise((resolve, reject) => {
-
-        var userProfile = {
-            firstname: firstname,
-            lastname: lastname,
-            description: description,
-            age: age,
-            email: firebase.auth().currentUser.email
-        }
-        if (!firebase.apps.length) {
-            firebase.initializeApp(ApiKeys.FirebaseConfig);
-        }
-        const userId = firebase.auth().currentUser.uid;
-
-        console.log(userId)
-
-       
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'UserInfo' })],
-        })
-
-
-        // firebase.database().ref(`users/${userId}`).set(userProfile)
-        //     .then(() => resolve(userProfile))
-        //     .then(() => this.props.navigation.dispatch(resetAction))
-        //     .catch(error => reject(error));
-
-        firebaseApp.database().ref('/users/' + userId).on('value', (snapshot) => {
-            const userObj = snapshot.val();
-            console.log(userObj)
-            this.userProfile.firstname = userObj.firstname;
-            this.lastname = userObj.lastname;
-            this.description = userObj.description;
-            this.age = userObj.age
-        })
-            .then(() => resolve(userProfile))
-            .then(() => this.props.navigation.dispatch(resetAction))
-            .catch(error => reject(error))
-
-
-    });
-
-
-
     render() {
-        console.log(firstname, lastname)
-        // useEffect(() => {
-        //     getUser(), []
-        // })
+
         getUser()
         return (
-            <SafeAreaView style={styles.container}>
-                {/* <ScrollView bounces={false} showsHorizontalScrollIndicator={false}> */}
-                <View style={styles.imageContainer}>
-                    <Image source={pic} style={styles.image} />
-                </View>
-                <Text h4 style={styles.name}>
-                    {userEmail}, {firstname} {lastname}
-                </Text>
-                <Text style={styles.desc}>Fashion Designer at Amelia & Co.</Text>
-                <Divider style={styles.divider} />
-                <Text style={styles.desc}>
-                    I love to travel. I have a cat named pickles. If he likes you, I
-                    probably will too.
-                </Text>
-                <Divider style={styles.divider} />
-                <Text style={styles.desc}>Find me on Social here</Text>
-                <View style={styles.socialLinks}>
-                    <Social name="snapchat" />
-                    <Social name="instagram" />
-                    <Social name="facebook-square" />
-                </View>
-                {/* </ScrollView> */}
-                {/* <Button title="testing database" onPress={() => UpdateProfile('john', 'doe')} /> */}
-                <Button title='sign out' onPress={this.signOut} />
-            </SafeAreaView>
+            <LinearGradient colors={['#aac7cb', '#84d8e6', '#0ddafa']}
+                style={styles.linearGradient}
+                locations={[0, 0.5, 1]}
+                useAngle={true} angle={45}
+                angleCenter={{ x: 0.5, y: 0.5 }}>
+
+                <SafeAreaView style={styles.container}>
+
+                    <View style={styles.imageContainer}>
+                        <Image source={pic} style={styles.image} />
+                    </View>
+                    <Text h4 style={styles.name}>
+                        {userEmail}, {this.state.res.lastname},
+                    {this.state.res.firstname}
+                    </Text>
+                    <Text style={styles.desc}>Fashion Designer at Amelia & Co. </Text>
+                    <Divider style={styles.divider} />
+                    <Text style={styles.desc}>
+                        {this.state.res.description}
+                        
+                    </Text>
+                    <Divider style={styles.divider} />
+                    <Button style={styles.signOut} title='sign out' onPress={this.signOut} />
+                    <Text style={styles.desc}>Find me on Social here</Text>
+                    <View style={styles.socialLinks}>
+
+                        <SocialIcon
+                            type='twitter'
+                        />
+
+                        <SocialIcon
+                            raised={false}
+                            type='facebook'
+                        />
+
+                        <SocialIcon
+                            iconSize={56.5}
+                            type='snapchat'
+                            iconColor='yellow'
+                        />
+
+                        <SocialIcon
+                            style={styles.instagramLogo}
+                            type='instagram'
+                        />
+
+
+                    </View>
+
+                    {/* </ScrollView> */}
+                    {/* <Button title="testing database" onPress={() => UpdateProfile('john', 'doe')} /> */}
+                    
+                </SafeAreaView>
+            </LinearGradient>
         )
     }
 }
@@ -192,16 +186,25 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
+    instagramLogo: {
+
+        backgroundColor: ('#CA1D7E', '#E35157', '#F2703F'),
+
+
+    },
+    signOut: {
+        paddingBottom: 200
+    },
     imageContainer: {
         margin: 20,
     },
     image: {
         width: Layout.window.width - 60, // device width - some margin
         height: Layout.window.height / 2 - 60, // device height / 2 - some margin
-        borderRadius: 20,
+        //borderRadius: 20,
         //width: 250,
         //height: 250,
-        borderRadius: 20
+        //borderRadius: 20
 
     },
     name: {
