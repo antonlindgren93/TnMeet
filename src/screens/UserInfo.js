@@ -1,3 +1,4 @@
+
 import React from 'react'
 import { Text, StyleSheet, View, Image, ScrollView, TouchableOpacity, TextInput, Button, Alert } from 'react-native'
 import ApiKeys from '../../Apis/ApiKeys'
@@ -17,6 +18,8 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import DrawerNavigator from '../../navigation/DrawerNavigation'
 import { ProfileStackNavigator } from '../../navigation/StackNavigation';
 import SignUpNavigation from '../../navigation/SignUpNavigationDrawer'
+import ProfileComponent from '../components/ProfileComponent'
+import SignUp from '../screens/SignUp'
 
 
 const storage = firebase.storage()
@@ -35,6 +38,9 @@ export default class UserInfo extends React.Component {
             description: '',
             age: '',
             image: require('../../assets/profileImageTN2.png'),
+            //Koppla namn från databasen 
+            email: firebase.auth().currentUser.email
+            
         })
 
         getUser()
@@ -96,16 +102,17 @@ export default class UserInfo extends React.Component {
     //SET STATE IN THIS FUNCTION
     onChooseImagePress = async () => {
 
+        
         let resultFromLibrary = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
             aspect: [4, 3]
         });
         if (!resultFromLibrary.cancelled) {
-            this.uploadImage(resultFromLibrary.uri, "Library")
-
+            this.uploadImage(resultFromLibrary.uri)
             this.setState({
                 image: resultFromLibrary
             })
+            console.log('this is image from librRY ' + resultFromLibrary)
 
                 .then(() => {
 
@@ -122,12 +129,12 @@ export default class UserInfo extends React.Component {
     }
 
     uploadImage = async (uri, imageName) => {
+        getUser()
         const response = await fetch(uri)
         const blob = await response.blob()
 
-        var ref = firebase.storage().ref().child("images/" + imageName)
-
-
+        var ref = firebase.storage().ref().child("images/" + this.state.email)
+        
 
 
         return ref.put(blob)
@@ -164,19 +171,7 @@ export default class UserInfo extends React.Component {
 
 
                     <View style={styles.container}>
-                        {/* <TouchableOpacity style={styles.profilePlaceholder} onPress={this.onTakePicturePress}>
                        
-                        <Image soure={{uri : this.state.image}} style={styles.profilImage}/>
-
-                    <Ionicons name="ios-add" size={60} color="white"  />
-
-                    </TouchableOpacity> */}
-
-
-                        {/* require('../../assets/profileImageTN.png') */}
-
-
-
                         <Image source={this.state.image} style={styles.profilePlaceholder} />
 
 
@@ -201,8 +196,7 @@ export default class UserInfo extends React.Component {
                             placeholder="Enter first name"
                             placeholderTextColor="#fff"
                             onChangeText={(firstname) => this.setState({ firstname })}
-                        // onChange={this.handleChange}
-                        //value={state.firstname} 
+                        
                         />
                         <TextInput
                             style={styles.textinput}
@@ -240,7 +234,8 @@ export default class UserInfo extends React.Component {
                                 this.state.firstname,
                                 this.state.lastname,
                                 this.state.age,
-                                this.state.description
+                                this.state.description,
+                                
                             )
                             }
                         >

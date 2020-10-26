@@ -13,6 +13,7 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import { SocialIcon } from 'react-native-elements'
 import { FlatList } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ScreenStackHeaderRightView } from 'react-native-screens';
 
 
 
@@ -21,6 +22,10 @@ var currentUse
 var userEmail
 var firstname
 var lastname
+
+
+
+
 
 if (!firebase.apps.length) {
     firebase.initializeApp(ApiKeys.FirebaseConfig);
@@ -57,6 +62,7 @@ const UpdateProfile = (firstname, lastname) => new Promise((resolve, reject) => 
 
     };
 
+    downloadImage(url)
     firebase.database().ref(`users/${userId}`).set(userProfile)
         .then(() => resolve(userProfile))
         .catch(error => reject(error));
@@ -64,7 +70,7 @@ const UpdateProfile = (firstname, lastname) => new Promise((resolve, reject) => 
 
 const randomNo = (min, max) =>
     Math.floor(Math.random() * (max - min) + min)
-const pics = [require('../../assets/ana.jpg'), require('../../assets/ana.jpg')]
+ const pics = [require('../../assets/ana.jpg'), require('../../assets/ana.jpg')]
 const Social = ({ name }) => (
     <Icon
         name={name}
@@ -73,18 +79,30 @@ const Social = ({ name }) => (
         size={32}
     />
 )
-const pic = pics[randomNo(1, pics.length)]
+ const pic = pics[randomNo(1, pics.length)]
+
+
+
+
 
 export default class ProfilePage extends React.Component {
     _isMounted = false;
 
 
+
+    
+
+
     constructor(props) {
         super(props)
         this.state = {
-            res: []
+            res: [],
+            image: ''
+            
         }
     }
+    
+
 
     componentDidMount() {
 
@@ -123,21 +141,23 @@ export default class ProfilePage extends React.Component {
 
         getUser()
         return (
-            <LinearGradient colors={['#aac7cb', '#84d8e6', '#0ddafa']}
-                style={styles.linearGradient}
-                locations={[0, 0.5, 1]}
-                useAngle={true} angle={45}
-                angleCenter={{ x: 0.5, y: 0.5 }}>
-
+            
+            
                 <SafeAreaView style={styles.container}>
+                    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 
                     <View style={styles.imageContainer}>
                         <Image source={pic} style={styles.image} />
+                        <Image source={this.state.image}/>
                     </View>
                     <Text h4 style={styles.name}>
-                        {userEmail}, {this.state.res.lastname},
-                    {this.state.res.firstname}
+                    {this.state.res.firstname + ' '}
+                         {this.state.res.lastname}
+                    
                     </Text>
+                    {/* <Text style={styles.email}>
+                    {userEmail}
+                    </Text> */}
                     <Text style={styles.desc}>Fashion Designer at Amelia & Co. </Text>
                     <Divider style={styles.divider} />
                     <Text style={styles.desc}>
@@ -145,10 +165,11 @@ export default class ProfilePage extends React.Component {
                         
                     </Text>
                     <Divider style={styles.divider} />
-                    <Button style={styles.signOut} title='sign out' onPress={this.signOut} />
+
                     <Text style={styles.desc}>Find me on Social here</Text>
                     <View style={styles.socialLinks}>
 
+                    <View style={{marginBottom:200, flexDirection:'row', marginTop:30}}>
                         <SocialIcon
                             type='twitter'
                         />
@@ -168,15 +189,16 @@ export default class ProfilePage extends React.Component {
                             style={styles.instagramLogo}
                             type='instagram'
                         />
+                        </View>
 
 
                     </View>
 
                     {/* </ScrollView> */}
                     {/* <Button title="testing database" onPress={() => UpdateProfile('john', 'doe')} /> */}
-                    
+                    </ScrollView>
                 </SafeAreaView>
-            </LinearGradient>
+                
         )
     }
 }
@@ -199,6 +221,7 @@ const styles = StyleSheet.create({
         margin: 20,
     },
     image: {
+        borderRadius:20,
         width: Layout.window.width - 60, // device width - some margin
         height: Layout.window.height / 2 - 60, // device height / 2 - some margin
         //borderRadius: 20,
@@ -211,13 +234,20 @@ const styles = StyleSheet.create({
         color: '#5E5E5E',
         alignSelf: 'flex-start',
         marginLeft: 30,
+        fontSize:20
+    },
+    email:{
+        fontSize:10,
+        alignSelf: 'flex-start'
+
+        
     },
     desc: {
         color: '#5E5E5E',
         alignSelf: 'flex-start',
         marginTop: 5,
         marginHorizontal: 30,
-        fontSize: 14,
+        fontSize: 18,
     },
     divider: {
         backgroundColor: '#C0C0C0',
@@ -237,4 +267,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 15,
     },
+    scrollView: {
+
+    }
 })
