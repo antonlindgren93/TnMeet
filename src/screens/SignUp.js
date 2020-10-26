@@ -113,10 +113,7 @@ export default class SignUp extends React.Component {
                         onPress={this.handleSignUp}>
                         <Text style={styles.signUpBtn}>Sign up! </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.signUpBtn}
-                        onPress={this.handleSignUp}>
-                        <Text style={styles.signUpBtn}>Sign up! <AntDesign name="arrowright" size={24} color="white" /></Text>
-                    </TouchableOpacity>
+                   
 
 
                     <Text style={styles.lineStyle}>───────────── OR ─────────────</Text>

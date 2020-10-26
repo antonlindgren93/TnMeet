@@ -32,7 +32,9 @@ export default class App extends React.Component {
     if (!firebase.apps.length) {
       firebase.initializeApp(ApiKeys.FirebaseConfig);
     }
+
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged)
+
   }
   onAuthStateChanged = (user) => {
     this.setState({ isAuthenticationReady: true });
