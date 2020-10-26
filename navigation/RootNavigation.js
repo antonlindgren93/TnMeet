@@ -31,7 +31,7 @@ const RootNavigation = createStackNavigator(
         // ForgotPassword: ForgotPasswordScreen,
     },
     {
-        initialRouteName: "SignUp",
+        initialRouteName: "SignIn",
         defaultNavigationOptions: {
             headerShown: false
         }

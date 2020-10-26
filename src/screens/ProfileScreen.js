@@ -42,7 +42,7 @@ export default class ProfileScreen extends React.Component {
     }
 
     componentDidMount() {
-        _mounted = true
+        this._isMounted = true
         this.authUser().then((user) => {
             //console.log('componentdidmount user is' + user)
             //this.userHasAuthenticated(true);

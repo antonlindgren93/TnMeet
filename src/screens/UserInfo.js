@@ -61,11 +61,8 @@ export default class UserInfo extends React.Component {
 
 
                 }).catch((error) => {
-
                 })
         }
-
-
     }
 
     UpdateToFirebase = (firstname, lastname, age, description) => new Promise((resolve, reject) => {
@@ -82,15 +79,11 @@ export default class UserInfo extends React.Component {
             index: 0,
             actions: [NavigationActions.navigate({ routeName: 'SignUpNavigationDrawer' })],
         })
-
-
         firebase.database().ref(`users/${userId}`).set(userProfile)
             .then(() => resolve(userProfile))
             .then(() => this.props.navigation.dispatch(resetAction))
             //.then(() => navigation.navigate("Explore"))
             .catch(error => reject(error));
-
-
     });
 
     //SET STATE IN THIS FUNCTION
@@ -106,19 +99,12 @@ export default class UserInfo extends React.Component {
             this.setState({
                 image: resultFromLibrary
             })
-
                 .then(() => {
-
-
                     Alert.alert("Success!")
-
-
                 }).catch((error) => {
                     Alert.alert('Error:', error.message)
                 })
         }
-
-
     }
 
     uploadImage = async (uri, imageName) => {
@@ -126,8 +112,6 @@ export default class UserInfo extends React.Component {
         const blob = await response.blob()
 
         var ref = firebase.storage().ref().child("images/" + imageName)
-
-
 
 
         return ref.put(blob)
@@ -310,14 +294,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         textAlignVertical: 'top',
     },
-    profileImage: {
-        resizeMode: 'contain',
-        width: 150,
-        height: 150,
-        backgroundColor: 'transparent',
-        backfaceVisibility: 'hidden',
-
-    },
+ 
     camera: {
         paddingRight: '40%'
     },
