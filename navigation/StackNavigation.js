@@ -3,7 +3,7 @@ import { TouchableOpacity, } from 'react-native'
 import { createStackNavigator } from "@react-navigation/stack";
 import { Octicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import ProfileScreen from '../src/screens/ProfileScreen'
-import Message from '../src/screens/Message'
+import Message from '../src/screens/Messages'
 import Explore from '../src/screens/ExploreScreen'
 import SignIn from '../src/screens/SignIn'
 import SignUp from '../src/screens/SignUp'
@@ -12,6 +12,7 @@ import * as firebase from 'firebase'
 import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 import { LinearGradient } from 'expo-linear-gradient';
 import UserInfo from '../src/screens/UserInfo'
+import SettingsScreen from '../src/screens/SettingsScreen'
 
 
 const Stack = createStackNavigator();
@@ -19,62 +20,63 @@ const Stack = createStackNavigator();
 const screenOptionStyle = {
 
     headerStyle: {
-        // backgroundColor: "#05c46b",
         backgroundColor: 'transparent'
-
     },
     headerTintColor: "black",
-
 };
 
 // Every stack in our TabBar is here below
 
 
-// const MainStackNavigator = () => {
+const SettingsStackNavigator = () => {
 
-//     const [res, setRes] = useState([]);
+    const [res, setRes] = useState([]);
 
-//     var db = firebase.database().ref('users')
-//     var auth = firebase.auth().currentUser.uid
+    var db = firebase.database().ref('users')
+    var auth = firebase.auth().currentUser.uid
 
-//     useEffect(() => {
-//         db.child('user').child(auth).on('value', (snapshot) => {
-//             const res = snapshot.val()
-//             setRes(res)
+    useEffect(() => {
+        db.child('user').child(auth).on('value', (snapshot) => {
+            const res = snapshot.val()
+            setRes(res)
+            console.log("this is the" + res)
 
-//         })
-//     }, [])
+        })
+    }, [])
 
-//     return (
-//         <Stack.Navigator screenOptions={screenOptionStyle}>
-//             <Stack.Screen name="Home" component={Home} options={({ navigation, route }) => ({
+    return (
 
-//                 headerRight: () => (
-//                     <TouchableOpacity onPress={navigation.openDrawer}>
-//                         {/*Donute Button Image */}
-//                         <MaterialCommunityIcons name="menu" size={32} color="white" style={{ marginRight: 10 }} />
-//                     </TouchableOpacity>
-//                 ),
-//                 headerTitleStyle: {
-//                     alignSelf: 'center',
+        <Stack.Navigator screenOptions={screenOptionStyle}>
 
-//                 },
-//                 title: 'Hej ' + res.first_name + '!',
-//                 // title: 'hej',
-//                 headerLeft: () => (
-//                     <MaterialCommunityIcons name="chevron-left"
-//                         style={{ marginLeft: 10, display: "none" }}
-//                         size={32} color='white'
-//                     />
-//                 )
-//             })} />
-//             <Stack.Screen name="Profile" component={TryKit} options={{
-//                 headerBackTitleVisible: false
-//             }} />
-//         </Stack.Navigator>
-//     );
+            <Stack.Screen name="Settings" component={SettingsScreen} options={({ navigation, route }) => ({
 
-// };
+                headerRight: () => (
+                    <TouchableOpacity onPress={navigation.openDrawer}>
+                        {/*Donute Button Image */}
+                        <MaterialCommunityIcons name="menu" size={32} color="black" style={{ marginRight: 10 }} />
+                    </TouchableOpacity>
+                ),
+                headerTitleStyle: {
+                    alignSelf: 'center',
+
+                },
+
+                //title: 'Hej ' + res.lastname + '!',
+                // title: 'hej',
+                headerLeft: () => (
+                    <MaterialCommunityIcons name="chevron-left"
+                        style={{ marginLeft: 10, display: "none" }}
+                        size={32} color='white'
+                    />
+                )
+            })} />
+            <Stack.Screen name="Profile" component={ProfileStackNavigator} options={{
+                headerBackTitleVisible: false
+            }} />
+        </Stack.Navigator>
+    );
+
+};
 
 
 
@@ -138,7 +140,7 @@ const ExploreStackNavigator = () => {
 
                 headerRight: () => (
                     <TouchableOpacity onPress={navigation.openDrawer}>
-                     
+
                         <MaterialCommunityIcons name="menu" size={32} color="white" style={{ marginRight: 10 }} />
                     </TouchableOpacity>
                 ),
@@ -213,6 +215,9 @@ const MessageDetailsStackNavigator = ({ navigation }) => {
                     </TouchableOpacity>
                 )
             }} />
+            <Stack.Screen name="Messages" component={Message} options={{
+                // headerBackTitleVisible: false
+            }} />
         </Stack.Navigator>
     );
 };
@@ -250,5 +255,5 @@ const UserInfoStackNavigator = ({ navigation }) => {
 
 
 
-export { ProfileStackNavigator, MessageStackNavigator, ExploreStackNavigator, SignInStackNavigator, MessageDetailsStackNavigator, UserInfoStackNavigator};
+export { ProfileStackNavigator, MessageStackNavigator, ExploreStackNavigator, SignInStackNavigator, MessageDetailsStackNavigator, UserInfoStackNavigator, SettingsStackNavigator };
 // export { MainStackNavigator, RecipeStackNavigator, TrainingStackNavigator, DiaryStackNavigator, AboutStackNavigator, BookUsStackNavigator, PoddStackNavigator, };

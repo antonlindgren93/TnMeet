@@ -1,7 +1,8 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from 'react-native'
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { ProfileStackNavigator, } from "./StackNavigation";
+import { ProfileStackNavigator, SettingsStackNavigator, } from "./StackNavigation";
+import {SettingsStackNAvigator} from "./StackNavigation"
 import TabNavigator from "./Tabnavigation";
 import * as firebase from 'firebase'
 import { NavigationContainer } from "@react-navigation/native";
@@ -47,6 +48,7 @@ const DrawerNavigator = () => {
             <Drawer.Screen name="Boka oss" component={BookUsStackNavigator} />
             <Drawer.Screen name="Podd" component={PoddStackNavigator} /> */}
             <Drawer.Screen name="Logga ut" component={LogOut} />
+            <Drawer.Screen name="Settings" component={SettingsStackNavigator}/>
         </Drawer.Navigator >
        
 

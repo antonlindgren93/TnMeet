@@ -2,43 +2,23 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { createAppContainer } from 'react-navigation'
 import ApiKeys from './Apis/ApiKeys'
 import React from 'react'
-import { Text, View, StyleSheet, Platform, StatusBar, Button, ActivityIndicator } from 'react-native'
+import { Text, View, StyleSheet, Platform, StatusBar, Button, ActivityIndicator, Image } from 'react-native'
 import * as firebase from 'firebase'
 import { StackActions, NavigationActions } from 'react-navigation'
 import RootNavigation from './navigation/RootNavigation'
 import DrawerNavigation from './navigation/DrawerNavigation'
 import { NavigationContainer } from '@react-navigation/native'
 import { SignInStackNavigator } from './navigation/StackNavigation'
-
-
-function authUser() {
-  return new Promise(function (resolve, reject) {
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        resolve(user);
-        console.log(user.email + 'logged in')
-      } else {
-        reject('User not logged in');
-      }
-    });
-  });
-}
-function skipLogin() {
-  if (!firebase.apps.length) {
-    firebase.initializeApp(ApiKeys.FirebaseConfig);
-  }
-
-  const resetAction = StackActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'MainScreen' })],
-  })
-    .then(() => this.props.navigation.dispatch(resetAction))
-}
+import { AppLoading } from 'expo';
+import { Asset } from 'expo-asset';
+import SplashScreen from 'react-native-splash-screen'
+import { useEffect, Fragment } from 'react'
 
 
 export default class App extends React.Component {
-
+  _isMounted = false
   constructor(props) {
+
     super(props);
 
     this.state = {
@@ -51,71 +31,66 @@ export default class App extends React.Component {
 
     if (!firebase.apps.length) {
       firebase.initializeApp(ApiKeys.FirebaseConfig);
-      firebase.auth().onAuthStateChanged(this.onAuthStateChanged)
     }
-   
+
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged)
+
   }
   onAuthStateChanged = (user) => {
-    console.log(user)
     this.setState({ isAuthenticationReady: true });
     this.setState({ isAuthenticated: !!user });
+    console.log(!!user)
   }
 
+  componentDidMount = () => {
+    this._isMounted = true
+    this.setState({ isLoadingComplete: true })
+    console.log(this.state.isAuthenticationReady)
+  }
+  componentWillUnmount = () => {
+    this._isMounted = false
+  }
   render() {
+    // useEffect(() => {
+    //   SplashScreen.hide()
+    // }, [])
 
-    // if ((!this.state.isLoadingComplete || !this.state.isAuthenticated)) {
-    //   return (
+    if ((!this.state.isLoadingComplete && !this.state.isAuthenticationReady)) {
+      return (
+        <ActivityIndicator />
+      )
 
-    //     <View style={styles.container}>
+    } else {
+      return (
 
-    //       {/* {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-    //       {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />} */}
-
-    //       <ActivityIndicator size="large" color="#0000ff" />
-    //       {/* <RootNavigation /> */}
-    //     </View>
-
-    //   );
-    // } else {
-    return (
-
-      <View style={styles.container}>
-        {(this.state.isAuthenticated) ? <NavigationContainer>
-          <DrawerNavigation />
-        </NavigationContainer> : <RootNavigation />}
-        {/* {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+        <View style={styles.container}>
+          {(this.state.isAuthenticated) ? <NavigationContainer>
+            <DrawerNavigation />
+          </NavigationContainer> : <RootNavigation />}
+          {/* {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />}
 
           */}
 
 
-      </View>
-    );
+        </View>
+      );
+    }
   }
+  //}
+  _handleFinishLoading = () => {
+    this.setState({ isLoadingComplete: true });
+  }
+  async _cacheResourcesAsync() {
+    const images = [require('./assets/snack.png')];
+
+    const cacheImages = images.map(image => {
+      return Asset.fromModule(image).downloadAsync();
+    });
+    return Promise.all(cacheImages);
+  }
+
 }
-//}
-_handleFinishLoading = () => {
-  this.setState({ isLoadingComplete: true });
-}
-
-// }
-
-
-// const navigator = createStackNavigator({
-
-//   SignIn: SignIn,
-//   LoadingScreen: LoadingScreen,
-//   SignUp: SignUp,
-//   ManageHobbies: ManageHobbies,
-//   MainScreen: MainScreen,
-//   Message: Message,
-//   UserInfo: UserInfo,
-//   UserDetails: UserDetails,
-//   App: App,
-//   DrawerScreen: DrawerScreen
-// }, {
-//   initialRouteName: 'App',
-// })
 
 const styles = StyleSheet.create({
   container: {
@@ -129,4 +104,4 @@ const styles = StyleSheet.create({
   },
 })
 
-// export default createAppContainer(navigator)
+

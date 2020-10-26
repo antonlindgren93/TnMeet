@@ -15,10 +15,11 @@ import TabNavigation from '../../navigation/Tabnavigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import { ExploreStackNavigator } from '../../navigation/StackNavigation'
 import { useNavigation } from '@react-navigation/native'
+import SignUpNavigation from '../../navigation/SignUpNavigationDrawer'
 
 
 export default class SignIn extends React.Component {
-  
+
     constructor(props) {
         super(props)
         this.state = {
@@ -28,17 +29,26 @@ export default class SignIn extends React.Component {
         }
         //   const navigation = useNavigation()
     }
+    componentDidMount() {
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user != null) {
+                this.setState({ isAuthenticated: !!user });
+            }
+        })
+    }
+
 
     handleGoogleLogIn = () => {
-     const provider = new firebase.auth.GoogleAuthProvider() ;
-     //firebase.auth.signInWithEmailAndPassword(provider) 
-     firebase.auth.signInWithPopup(provider)
+        const provider = new firebase.auth.GoogleAuthProvider();
+        //firebase.auth.signInWithEmailAndPassword(provider) 
+        firebase.auth.signInWithPopup(provider)
     }
     // handleSignOutWithGoogle = () => {
     //     return firebase.auth().currentUser && ()
     // }
-   
-   
+
+
 
     handleLogin = () => {
 
@@ -50,12 +60,12 @@ export default class SignIn extends React.Component {
         const resetAction = StackActions.reset({
             index: 0,
             key: null,
-            actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
+            actions: [NavigationActions.navigate({ routeName: 'SignUpNavigationDrawer' })],
         })
         firebase
             .auth()
             .signInWithEmailAndPassword(this.state.email, this.state.password)
-           // .then(() => this.props.navigation.navigate('TabNavigation'))
+            // .then(() => this.props.navigation.navigate('TabNavigation'))
             .then(() => this.props.navigation.dispatch(resetAction))
             .catch(error => this.setState({ errorMessage: error.message }))
     }
